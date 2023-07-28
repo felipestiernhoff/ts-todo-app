@@ -4,22 +4,19 @@ import { useTodo } from '../context'
 import { Input } from './Input'
 
 export const AddTodo = () => {
-  const [input, setInput] = useState<string>("")
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [])
+  const [input, setInput] = useState<string>('')
+  const [todos, setTodos] = useState<string[]>([])
 
   const handleSubmission = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('form has been submitted')
+    if (input.trim() !== '') {
+      setTodos([...todos, input])
+      setInput('')
+    }
   }
 
   return (
-    <form>
+    <form onSubmit={handleSubmission}>
       <div className="flex items-center w-full max-w-lg gap-2 p-5 m-auto">
         <input
           value={input}
