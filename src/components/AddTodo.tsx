@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { useTodo } from '../context'
+import { useTodo } from '../context/useTodo'
 import { Input } from './Input'
 
 export const AddTodo = () => {
-  const [input, setInput] = useState<string>("")
+  const [input, setInput] = useState<string>('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const { addTodo } = useTodo()
 
   useEffect(() => {
     if (inputRef.current) {
@@ -15,18 +16,24 @@ export const AddTodo = () => {
 
   const handleSubmission = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('form has been submitted')
+    if (input.trim() !== '') {
+      addTodo(input)
+      setInput('')
+      toast.success('Todo added successfully!')
+    } else {
+      toast.error('Todo field cannot be empty!')
+    }
   }
 
   return (
-    <form>
+    <form onSubmit={handleSubmission}>
       <div className="flex items-center w-full max-w-lg gap-2 p-5 m-auto">
-        <input
+        <Input
+          ref={inputRef}
+          type="text"
+          placeholder="start typing ..."
           value={input}
           onChange={e => setInput(e.target.value)}
-          type="text"
-          className="w-full px-5 py-2 bg-transparent border-2 outline-none border-zinc-600 rounded-xl placeholder:text-zinc-500 focus:border-white"
-          placeholder="start typing ..."
         />
         <button
           type="submit"
